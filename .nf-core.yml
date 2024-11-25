@@ -1,0 +1,27 @@
+bump_version: null
+lint:
+  files_exist:
+  - assets/multiqc_config.yml
+  - assets/multiqc_config.yml
+  files_unchanged:
+  - .github/CONTRIBUTING.md
+  - assets/sendmail_template.txt
+  - .github/CONTRIBUTING.md
+  - assets/sendmail_template.txt
+  multiqc_config: false
+nf_core_version: 3.0.2
+org_path: null
+repository_type: pipeline
+template:
+  author: Andrea Talenti
+  description: Workflow to joint call multiple GVCFs
+  force: true
+  is_nfcore: true
+  name: combinegvcfs
+  org: nf-core
+  outdir: .
+  skip_features:
+  - multiqc
+  - fastqc
+  version: 0.1.0
+update: null
