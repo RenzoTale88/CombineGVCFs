@@ -15,6 +15,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/stats": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "glnexus": {
                         "branch": "master",
                         "git_sha": "bcf36bc95e3e5605e9859b8e9a49648841e04fe8",
