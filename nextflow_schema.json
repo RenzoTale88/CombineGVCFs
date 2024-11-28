@@ -34,6 +34,11 @@
                     "description": "The size of each interval to process concurrently in bp.",
                     "default": 5000000
                 },
+                "glnexus_args": {
+                    "type": "string",
+                    "description": "Defines additional GLNexus configurations.",
+                    "default": "--config DeepVariantWGS"
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",

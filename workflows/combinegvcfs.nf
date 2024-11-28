@@ -7,6 +7,8 @@
 
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { GLNEXUS                } from '../modules/nf-core/glnexus/main'
+include { BCFTOOLS_CONCAT        } from '../modules/nf-core/bcftools/concat/main'
+include { BCFTOOLS_INDEX         } from '../modules/nf-core/bcftools/index/main'                                                                                                                           
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_combinegvcfs_pipeline'
 
@@ -88,10 +90,16 @@ workflow COMBINEGVCFS {
     }
     | groupTuple(by: 0)
     | collect
-    GLNEXUS(
+    ch_bcf_single = GLNEXUS(
         ch_input,
         ch_intervals
     )
+    ch_tbi_single = BCFTOOLS_INDEX(ch_bcf_single.bcf)
+
+    ch_bcf_single.bcf
+    | combine(ch_tbi_single.tbi, by:0)
+    | groupTuple(by:0)
+    | BCFTOOLS_CONCAT
 
     //
     // Collate and save software versions
