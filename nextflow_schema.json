@@ -29,6 +29,11 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
+                "chunk_size": {
+                    "type": "integer",
+                    "description": "The size of each interval to process concurrently in bp.",
+                    "default": 5000000
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",
@@ -42,6 +47,7 @@
             "title": "Reference genome options",
             "type": "object",
             "fa_icon": "fas fa-dna",
+            "required": ["fasta"],
             "description": "Reference genome related files and options required for the workflow.",
             "properties": {
                 "genome": {

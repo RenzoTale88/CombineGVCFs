@@ -47,11 +47,19 @@ workflow NFCORE_COMBINEGVCFS {
 
     main:
 
+    // Load fasta file
+    if (file(params.fasta).exists()){
+        ch_fasta = Channel.fromPath(params.fasta)
+    } else{
+        throw new Exception("Provide a valid fasta file with --fasta")
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
     COMBINEGVCFS (
-        samplesheet
+        samplesheet,
+        ch_fasta
     )
 }
 /*

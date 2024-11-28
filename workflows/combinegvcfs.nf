@@ -6,9 +6,49 @@
 
 
 include { paramsSummaryMap       } from 'plugin/nf-schema'
-
+include { GLNEXUS                } from '../modules/nf-core/glnexus/main'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_combinegvcfs_pipeline'
+
+
+process makeIntervals {
+    conda "bioconda::pysam:0.22.1"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/pysam:0.22.1--py39hcada746_0' :
+        'quay.io/biocontainers/pysam:0.22.1--py39hcada746_0' }"
+
+    input:
+    path fasta_fn
+
+    output:
+    path "intervals_*.bed"
+
+    script:
+    """
+    #!/usr/bin/env python
+    import pysam
+    import re
+
+    fasta = pysam.FastaFile("${fasta_fn}")
+    n = 1
+    bedfile = open(f"intervals_{n}.bed", "w")
+    tot = 0
+    target = ${params.chunk_size}
+    for seq_id in fasta.references:
+        sequence = fasta[seq_id]
+        for match in re.finditer('[ACGTacgt]+', str(sequence)):
+            start = match.start()
+            end = match.end()
+            if tot > target:
+                n += 1
+                tot = 0
+                bedfile.close()
+                bedfile = open(f"intervals_{n}.bed", "w")
+            tot += end - start
+            bedfile.write(f'{seq_id}\\t{start}\\t{end}\\n')
+    """
+}
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,10 +60,38 @@ workflow COMBINEGVCFS {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+    ch_fasta       // channel: fasta file from --fasta
+
     main:
 
     ch_versions = Channel.empty()
     
+    // Create intervals to process
+    ch_itvs = makeIntervals(ch_fasta)
+    ch_intervals = ch_itvs
+    | flatten
+    | map {
+        fname ->
+        def meta = [:]
+        meta.id = fname.simpleName.replace('intervals_', '') as int
+        [meta, fname]
+    }
+
+    // Collect the input VCFs to process
+    // Run GLNEXUS on each dataset
+    ch_input = ch_samplesheet
+    | map {
+        _meta, vcf -> 
+        def new_meta = [:]
+        new_meta.id = "joint_typing"
+        [new_meta, vcf]
+    }
+    | groupTuple(by: 0)
+    | collect
+    GLNEXUS(
+        ch_input,
+        ch_intervals
+    )
 
     //
     // Collate and save software versions
