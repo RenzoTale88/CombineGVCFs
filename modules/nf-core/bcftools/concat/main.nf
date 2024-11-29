@@ -1,4 +1,4 @@
-process BCFTOOLS_CONCAT {
+process BCFTOOLS_CONCAT_SORT {
     tag "$meta.id"
     label 'process_medium'
 
@@ -31,10 +31,15 @@ process BCFTOOLS_CONCAT {
     ${create_input_index}
 
     bcftools concat \\
-        --output ${prefix}.vcf.gz \\
         $args \\
+        -O u \\
+        -a \\
         --threads $task.cpus \\
-        ${vcfs}
+        ${vcfs} |\\
+    bcftools sort \\
+        -O z \\
+        --output ${prefix}.vcf.gz && \\
+    bcftools index --tbi ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
