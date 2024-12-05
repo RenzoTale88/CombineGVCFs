@@ -59,7 +59,7 @@ process GENOME_INTERVALS {
 }
 
 
-process fasta_index {
+process SAMTOOLS_FAIDX {
     conda "bioconda::samtools:1.21--h50ea8bc_0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
@@ -77,7 +77,7 @@ process fasta_index {
     """
 }
 
-process split_gvcf {
+process GVCF_SPLIT {
     label "process_single"
     conda "bioconda::bcftools:1.21--h8b25389_0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -114,7 +114,7 @@ workflow COMBINEGVCFS {
     ch_versions = Channel.empty()
     
     // Create intervals to process
-    ch_fai = fasta_index(ch_fasta)
+    ch_fai = SAMTOOLS_FAIDX(ch_fasta)
     ch_intervals = GENOME_INTERVALS(ch_fasta, ch_fai)
     | flatten
     | map {
@@ -131,7 +131,7 @@ workflow COMBINEGVCFS {
         meta, bed, _meta2, gvcf, gtbi ->
         [meta, bed, gvcf, gtbi]
     }
-    | split_gvcf
+    | GVCF_SPLIT
 
     // Collect the input VCFs to process
     // Run GLNEXUS on each dataset
