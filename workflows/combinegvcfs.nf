@@ -14,7 +14,7 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_combinegvcfs_pipeline'
 
 
-process makeIntervals {
+process GENOME_INTERVALS {
     conda "bioconda::pysam:0.22.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pysam:0.22.1--py39hcada746_0' :
@@ -115,8 +115,7 @@ workflow COMBINEGVCFS {
     
     // Create intervals to process
     ch_fai = fasta_index(ch_fasta)
-    ch_itvs = makeIntervals(ch_fasta, ch_fai)
-    ch_intervals = ch_itvs
+    ch_intervals = GENOME_INTERVALS(ch_fasta, ch_fai)
     | flatten
     | map {
         fname ->
@@ -125,8 +124,7 @@ workflow COMBINEGVCFS {
         [meta, fname]
     }
 
-    // Split each GVCF by contig to reduce loading time
-    ch_contigs = ch_fai | splitCsv(sep: '\t') | map { it -> [it[0], 0, it[1]] }
+    // Split each GVCF by intervals to reduce database loading times
     ch_input = ch_intervals
     | combine(ch_samplesheet)
     | map {
@@ -134,6 +132,7 @@ workflow COMBINEGVCFS {
         [meta, bed, gvcf, gtbi]
     }
     | split_gvcf
+
     // Collect the input VCFs to process
     // Run GLNEXUS on each dataset
     ch_bcf_single = ch_intervals
@@ -142,8 +141,11 @@ workflow COMBINEGVCFS {
         by:0
     )
     | GLNEXUS
+
+    // Index individual BCF files
     ch_tbi_single = BCFTOOLS_INDEX(ch_bcf_single.bcf)
 
+    // Concat-sort the BCF files
     ch_vcf = ch_bcf_single.bcf
     | combine(ch_tbi_single.csi, by:0)
     | map {
