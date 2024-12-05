@@ -19,8 +19,15 @@
                 "exists": true,
                 "pattern": "^\\S+\\.g(\\.)?vcf\\.gz$",
                 "errorMessage": "gVCF file for sample 1 must be provided, cannot contain spaces and must have extension '.gvcf.gz' or '.g.vcf.gz'"
+            },
+            "tbi": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.g(\\.)?vcf\\.gz\\.tbi$",
+                "errorMessage": "gVCF tabix index file for sample 1 must be provided, cannot contain spaces and must have extension '.gvcf.gz.tbi' or '.g.vcf.gz.tbi'"
             }
         },
-        "required": ["sample", "gvcf"]
+        "required": ["sample", "gvcf", "tbi"]
     }
 }

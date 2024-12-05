@@ -8,11 +8,10 @@ process GLNEXUS {
         'biocontainers/glnexus:1.4.1--h40d77a6_0' }"
 
     input:
-    tuple val(meta), path(gvcfs)
-    tuple val(meta2), path(bed)
+    tuple val(meta), path(bed), path(gvcfs)
 
     output:
-    tuple val(meta2), path("*.bcf"), emit: bcf
+    tuple val(meta), path("*.bcf"), emit: bcf
     path "versions.yml"           , emit: versions
 
     when:
@@ -20,7 +19,7 @@ process GLNEXUS {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta2.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def regions = bed ? "--bed ${bed}" : ""
 
     // Make list of GVCFs to merge
