@@ -30,12 +30,13 @@ process GLNEXUS {
     } else {
         avail_mem = task.memory.giga
     }
+    def config = params.glnexus_config == 'custom' ? "${file(params.glnexus_config_file)}" : "${params.glnexus_config}"
     """
     glnexus_cli \\
         --threads $task.cpus \\
         --mem-gbytes $avail_mem \\
         $regions \\
-        $args \\
+        --config $config \\
         ${input.join(' ')} \\
         > ${prefix}.bcf
 

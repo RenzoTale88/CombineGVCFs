@@ -34,10 +34,33 @@
                     "description": "The size of each interval to process concurrently in bp.",
                     "default": 5000000
                 },
-                "glnexus_args": {
+                "glnexus_config": {
                     "type": "string",
-                    "description": "Defines additional GLNexus configurations.",
-                    "default": "--config DeepVariantWGS"
+                    "description": "Defines GLNexus configuration.",
+                    "default": "DeepVariantWGS",
+                    "enum": [
+                        "DeepVariantWGS",
+                        "gatk",
+                        "gatk_unfiltered",
+                        "xAtlas",
+                        "xAtlas_unfiltered",
+                        "weCall",
+                        "weCall_unfiltered",
+                        "DeepVariant",
+                        "DeepVariantWGS",
+                        "DeepVariantWES",
+                        "DeepVariantWES_MED_DP",
+                        "DeepVariant_unfiltered",
+                        "Strelka2",
+                        "custom"
+                    ]
+                },
+                "glnexus_config_file": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "The path to a custom GLNexus configuration file.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-folder-open"
                 },
                 "email": {
                     "type": "string",
