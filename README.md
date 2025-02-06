@@ -81,10 +81,6 @@ For more details about the output files and reports, please refer to the
 
 nf-core/combinegvcfs was originally written by Andrea Talenti.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
-
 ## Contributions and Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
@@ -93,12 +89,19 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/combinegvcfs for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+* `bcftools`
+> **Twelve years of SAMtools and BCFtools.**
+>
+> Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li.
+>
+> Gigascience (2021) 10(2):giab008.
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
-
-An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
+* `GLNexus`
+> **Accurate, scalable cohort variant calls using DeepVariant and GLnexus.**
+>
+> Taedong Yun, Helen Li, Pi-Chuan Chang, Michael F Lin, Andrew Carroll, Cory Y McLean.
+>
+> Bioinformatics, Volume 36, Issue 24, December 2020, Pages 5582–5589.
 
 You can cite the `nf-core` publication as follows:
 
