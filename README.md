@@ -19,19 +19,7 @@
 
 ## Introduction
 
-**nf-core/combinegvcfs** is a bioinformatics pipeline that ...
-
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
-
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
-
-
+**nf-core/combinegvcfs** is a bioinformatics pipeline that takes a set of GVCF files and consolidates them in a single multi-sample VCF file.
 
 
 ## Usage
@@ -39,37 +27,81 @@
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+## Introduction
 
-First, prepare a samplesheet with your input data that looks as follows:
+This workflow will consolidate a set of GVCF files using GLNexus. The workflow will perform the consolidation chromosome-by-chromosome, pooling the small contigs (below `--chunk_size`), minimizing the number of processes and their run times.
+The GLNexus configuration can be specified with `--glnexus_config`. If a user needs to provide a custom configuration file, they can do so using the options `--glnexus_config custom --glnexus_config_file <PATH/TO/INPUT/CONFIG.yml>`.
 
-`samplesheet.csv`:
+## Samplesheet input
 
-```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-```
-
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
-
-Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
 
 ```bash
-nextflow run nf-core/combinegvcfs \
-   -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
+--input '[path to samplesheet file]'
 ```
 
-> [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
+The `sample` identifiers have to be unique, i.e. one sample per line. The file should have exactly three columns, specifying the sample name and the path to the respective GVCF and TBI files:
 
-For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/combinegvcfs/usage) and the [parameter documentation](https://nf-co.re/combinegvcfs/parameters).
+```csv title="samplesheet.csv"
+sample,gvcf,tbi
+SAMPLE1,AEG588A1_S1_L002_R1_001.g.vcf.gz,AEG588A1_S1_L002_R2_001.g.vcf.gz.tbi
+SAMPLE2,AEG588A1_S1_L003_R1_001.g.vcf.gz,AEG588A1_S1_L003_R2_001.g.vcf.gz.tbi
+SAMPLE3,AEG588A1_S1_L004_R1_001.g.vcf.gz,AEG588A1_S1_L004_R2_001.g.vcf.gz.tbi
+```
+
+An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+
+## Running the pipeline
+
+The typical command for running the pipeline is as follows:
+
+```bash
+nextflow run nf-core/combinegvcfs --input ./samplesheet.csv --outdir ./results --fasta GRCh37.fa -profile docker
+```
+
+This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+
+Note that the pipeline will create the following files in your working directory:
+
+```bash
+work                # Directory containing the nextflow working files
+<OUTDIR>            # Finished results in specified location (defined with --outdir)
+.nextflow_log       # Log file from Nextflow
+# Other nextflow hidden files, eg. history of pipeline runs and old logs.
+```
+
+If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command, you can specify these in a params file.
+
+Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
+
+:::warning
+Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+:::
+
+The above pipeline run specified with a params file in yaml format:
+
+```bash
+nextflow run nf-core/combinegvcfs -profile docker -params-file params.yaml
+```
+
+with:
+
+```yaml title="params.yaml"
+input: './samplesheet.csv'
+outdir: './results/'
+fasta: 'GRCh37.fa'
+<...>
+```
+
+You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+
+### Updating the pipeline
+
+When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
+
+```bash
+nextflow pull nf-core/combinegvcfs
+```
 
 ## Pipeline output
 
