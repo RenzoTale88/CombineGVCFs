@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+from pysam import VariantFile
+
+def calculate_qd(record):
+    total_depth = 0
+    use_ro_ao = 'RO' in record.format and 'AO' in record.format
+    use_ad = 'AD' in record.format
+    
+    for sample in record.samples:
+        # Skip samples with uncalled genotypes or homozygous reference
+        if not sample.called or all(a == '0' for a in sample.alleles):
+            continue
+        
+        # Calculate sample depth
+        if use_ro_ao:
+            total_depth += sample['RO'] + sum(sample['AO'])
+        elif use_ad:
+            total_depth += sum(sample['AD'])
+        else:
+            continue
+    
+    if total_depth == 0 or record.qual is None:
+        return 0.0
+    
+    qd = record.qual / total_depth
+    return min(qd, 35.0)
+
+
+def main():
+    print("Annotate QD for the different variants.")
+    vcf = VariantFile(sys.argv[1], "r")
+    header = vcf.header.copy()
+    header.add_line('##INFO=<ID=QD,Number=1,Type=Float,Description="Variant Confidence/Quality by Depth">')
+    vcf_out = VariantFile(sys.argv[2], "w", header=header)
+    for rec in vcf:
+        if rec.info.get("DP") is not None and rec.info.get("QD") is not None:
+            # Calculate QD
+            qd = rec.info["QD"]
+            dp = rec.info["DP"]
+            if dp > 0:
+                qd = qd / dp
+            else:
+                qd = 0.0
+            rec.info["QD"] = qd
+        else:
+            rec.info["QD"] = 0.0  # Default value if DP or QD is missing
+        vcf_out.write(rec)
+
+
+if __name__ == "__main__":
+    main()
