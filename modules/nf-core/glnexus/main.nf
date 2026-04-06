@@ -8,7 +8,7 @@ process GLNEXUS {
         'biocontainers/glnexus:1.4.1--h40d77a6_0' }"
 
     input:
-    tuple val(meta), path(bed), path(gvcfs)
+    tuple val(meta), path(bed), path(gvcfs), path(tbis)
 
     output:
     tuple val(meta), path("*.bcf"), emit: bcf
