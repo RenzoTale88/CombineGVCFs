@@ -8,8 +8,8 @@
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { GLNEXUS                } from '../modules/nf-core/glnexus/main'
 include { BCFTOOLS_CONCAT_SORT   } from '../modules/nf-core/bcftools/concat/main'
-include { BCFTOOLS_INDEX         } from '../modules/nf-core/bcftools/index/main'                                                                                                                           
-include { BCFTOOLS_STATS         } from '../modules/nf-core/bcftools/stats/main'                                                                                                                           
+include { BCFTOOLS_INDEX         } from '../modules/nf-core/bcftools/index/main'
+include { BCFTOOLS_STATS         } from '../modules/nf-core/bcftools/stats/main'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_combinegvcfs_pipeline'
 
@@ -112,7 +112,7 @@ workflow COMBINEGVCFS {
     main:
 
     ch_versions = Channel.empty()
-    
+
     // Create intervals to process
     ch_fai = SAMTOOLS_FAIDX(ch_fasta)
     ch_intervals = GENOME_INTERVALS(ch_fasta, ch_fai)
@@ -125,21 +125,12 @@ workflow COMBINEGVCFS {
     }
 
     // Split each GVCF by intervals to reduce database loading times
-    ch_input = ch_intervals
-    | combine(ch_samplesheet)
-    | map {
-        meta, bed, _meta2, gvcf, gtbi ->
-        [meta, bed, gvcf, gtbi]
-    }
-    | GVCF_SPLIT
-
-    // Collect the input VCFs to process
-    // Run GLNEXUS on each dataset
     ch_bcf_single = ch_intervals
     | combine(
-        ch_input | groupTuple(by: 0),
-        by:0
-    )
+        ch_samplesheet
+        | map { _meta, gvcf, tbi -> [gvcf, tbi] }
+    ) // combine intervals with GVCFs
+    | groupTuple(by: [0, 1])
     | GLNEXUS
 
     // Index individual BCF files
