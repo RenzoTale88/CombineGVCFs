@@ -95,7 +95,7 @@ workflow PIPELINE_COMPLETION {
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     hook_url        //  string: hook URL for notifications
-    
+
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -187,11 +187,11 @@ def toolCitationText() {
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
             "Tools used in the workflow included:",
-            
-            
-            "."
+            "GLNexus (Lin et al. 2018)",
+            "pysam (https://github.com/pysam-developers/pysam)",
+            "bcftools (Danecek et al. 2021)",
+            "samtools (Li et al. 2009)"
         ].join(' ').trim()
-
     return citation_text
 }
 
@@ -200,10 +200,8 @@ def toolBibliographyText() {
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
-            
-            
+        '.'
         ].join(' ').trim()
-
     return reference_text
 }
 
