@@ -3,3 +3,4 @@ channels:
   - bioconda
 dependencies:
   - bioconda::glnexus=1.4.1
+  - conda-forge::jemalloc
