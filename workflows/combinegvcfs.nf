@@ -94,6 +94,11 @@ workflow COMBINEGVCFS {
     ch_versions = Channel.empty()
 
     // Create intervals to process
+    if (!file("${ch_fasta}.fai").exists()) {
+        ch_fai = SAMTOOLS_FAIDX(ch_fasta)
+    } else {
+        ch_fai = Channel.fromPath("${ch_fasta}.fai")
+    }
     ch_fai = SAMTOOLS_FAIDX(ch_fasta)
     ch_intervals = GENOME_INTERVALS(ch_fasta, ch_fai)
     | flatten
