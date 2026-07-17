@@ -21,7 +21,6 @@
 
 **RenzoTale88/CombineGVCFs** is a bioinformatics pipeline that takes a set of GVCF files and consolidates them in a single multi-sample VCF file.
 
-
 ## Usage
 
 > [!NOTE]
@@ -121,19 +120,20 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-* `bcftools`
-> **Twelve years of SAMtools and BCFtools.**
->
-> Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li.
->
-> Gigascience (2021) 10(2):giab008.
+- `bcftools`
 
-* `GLNexus`
-> **Accurate, scalable cohort variant calls using DeepVariant and GLnexus.**
->
-> Taedong Yun, Helen Li, Pi-Chuan Chang, Michael F Lin, Andrew Carroll, Cory Y McLean.
->
-> Bioinformatics, Volume 36, Issue 24, December 2020, Pages 5582–5589.
+  > **Twelve years of SAMtools and BCFtools.**
+  >
+  > Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li.
+  >
+  > Gigascience (2021) 10(2):giab008.
+
+- `GLNexus`
+  > **Accurate, scalable cohort variant calls using DeepVariant and GLnexus.**
+  >
+  > Taedong Yun, Helen Li, Pi-Chuan Chang, Michael F Lin, Andrew Carroll, Cory Y McLean.
+  >
+  > Bioinformatics, Volume 36, Issue 24, December 2020, Pages 5582–5589.
 
 You can cite the `nf-core` publication as follows:
 
