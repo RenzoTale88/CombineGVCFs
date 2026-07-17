@@ -77,26 +77,6 @@ process SAMTOOLS_FAIDX {
     """
 }
 
-process GVCF_SPLIT {
-    label "process_single"
-    conda "bioconda::bcftools=1.21"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bcftools:1.21--h8b25389_0' :
-        'quay.io/biocontainers/bcftools:1.21--h8b25389_0' }"
-
-    input:
-    tuple val(meta), path(bed), path(gvcf), path(tbi)
-
-    output:
-    tuple val(meta), path("${gvcf.simpleName}.${meta.id}.g.vcf.gz")
-
-    script:
-    """
-    bcftools view -R ${bed} -O z ${gvcf} > ${gvcf.simpleName}.${meta.id}.g.vcf.gz
-    """
-}
-
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
