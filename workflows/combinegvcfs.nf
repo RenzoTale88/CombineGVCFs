@@ -15,7 +15,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_comb
 
 
 process GENOME_INTERVALS {
-    conda "bioconda::pysam:0.22.1"
+    conda "bioconda::pysam=0.22.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/pysam:0.22.1--py39hcada746_0' :
         'quay.io/biocontainers/pysam:0.22.1--py39hcada746_0' }"
@@ -60,7 +60,7 @@ process GENOME_INTERVALS {
 
 
 process SAMTOOLS_FAIDX {
-    conda "bioconda::samtools:1.21--h50ea8bc_0"
+    conda "bioconda::samtools=1.21"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
         'quay.io/biocontainers/samtools:1.21--h50ea8bc_0' }"
@@ -79,7 +79,7 @@ process SAMTOOLS_FAIDX {
 
 process GVCF_SPLIT {
     label "process_single"
-    conda "bioconda::bcftools:1.21--h8b25389_0"
+    conda "bioconda::bcftools=1.21"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bcftools:1.21--h8b25389_0' :
         'quay.io/biocontainers/bcftools:1.21--h8b25389_0' }"
