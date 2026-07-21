@@ -38,8 +38,9 @@ process BCFTOOLS_CONCAT_SORT {
         ${vcfs} |\\
     bcftools sort \\
         -O z \\
-        --output ${prefix}.vcf.gz && \\
-    bcftools index --tbi ${prefix}.vcf.gz
+        -T ./ \\
+        --write-index=tbi \\
+        --output ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
