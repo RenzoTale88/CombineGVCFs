@@ -1,13 +1,13 @@
 bump_version: null
 lint:
   files_exist:
-  - assets/multiqc_config.yml
-  - assets/multiqc_config.yml
+    - assets/multiqc_config.yml
+    - assets/multiqc_config.yml
   files_unchanged:
-  - .github/CONTRIBUTING.md
-  - assets/sendmail_template.txt
-  - .github/CONTRIBUTING.md
-  - assets/sendmail_template.txt
+    - .github/CONTRIBUTING.md
+    - assets/sendmail_template.txt
+    - .github/CONTRIBUTING.md
+    - assets/sendmail_template.txt
   multiqc_config: false
 nf_core_version: 3.0.2
 org_path: null
@@ -21,7 +21,7 @@ template:
   org: nf-core
   outdir: .
   skip_features:
-  - multiqc
-  - fastqc
+    - multiqc
+    - fastqc
   version: 0.1.0
 update: null

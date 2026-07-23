@@ -1,26 +1,25 @@
 <h1>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/nf-core-combinegvcfs_logo_dark.png">
-    <img alt="nf-core/combinegvcfs" src="docs/images/nf-core-combinegvcfs_logo_light.png">
+    <img alt="RenzoTale88/CombineGVCFs" src="docs/images/nf-core-combinegvcfs_logo_light.png">
   </picture>
 </h1>
 
-[![GitHub Actions CI Status](https://github.com/nf-core/combinegvcfs/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/combinegvcfs/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/combinegvcfs/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/combinegvcfs/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/combinegvcfs/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions CI Status](https://github.com/RenzoTale88/CombineGVCFs/actions/workflows/ci.yml/badge.svg)](https://github.com/RenzoTale88/CombineGVCFs/actions/workflows/ci.yml)
+[![GitHub Actions Linting Status](https://github.com/RenzoTale88/CombineGVCFs/actions/workflows/linting.yml/badge.svg)](https://github.com/RenzoTale88/CombineGVCFs/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/combinegvcfs/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/combinegvcfs)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/RenzoTale88/CombineGVCFs)
 
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23combinegvcfs-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/combinegvcfs)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-**nf-core/combinegvcfs** is a bioinformatics pipeline that takes a set of GVCF files and consolidates them in a single multi-sample VCF file.
-
+**RenzoTale88/CombineGVCFs** is a bioinformatics pipeline that takes a set of GVCF files and consolidates them in a single multi-sample VCF file.
 
 ## Usage
 
@@ -56,7 +55,7 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/combinegvcfs --input ./samplesheet.csv --outdir ./results --fasta GRCh37.fa -profile docker
+nextflow run RenzoTale88/CombineGVCFs --input ./samplesheet.csv --outdir ./results --fasta GRCh37.fa -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -81,7 +80,7 @@ Do not use `-c <file>` to specify parameters as this will result in errors. Cust
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run nf-core/combinegvcfs -profile docker -params-file params.yaml
+nextflow run RenzoTale88/CombineGVCFs -profile docker -params-file params.yaml
 ```
 
 with:
@@ -100,7 +99,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull nf-core/combinegvcfs
+nextflow pull RenzoTale88/CombineGVCFs
 ```
 
 ## Pipeline output
@@ -111,7 +110,7 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/combinegvcfs was originally written by Andrea Talenti.
+RenzoTale88/CombineGVCFs was originally written by Andrea Talenti.
 
 ## Contributions and Support
 
@@ -121,19 +120,20 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-* `bcftools`
-> **Twelve years of SAMtools and BCFtools.**
->
-> Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li.
->
-> Gigascience (2021) 10(2):giab008.
+- `bcftools`
 
-* `GLNexus`
-> **Accurate, scalable cohort variant calls using DeepVariant and GLnexus.**
->
-> Taedong Yun, Helen Li, Pi-Chuan Chang, Michael F Lin, Andrew Carroll, Cory Y McLean.
->
-> Bioinformatics, Volume 36, Issue 24, December 2020, Pages 5582–5589.
+  > **Twelve years of SAMtools and BCFtools.**
+  >
+  > Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies, Heng Li.
+  >
+  > Gigascience (2021) 10(2):giab008.
+
+- `GLNexus`
+  > **Accurate, scalable cohort variant calls using DeepVariant and GLnexus.**
+  >
+  > Taedong Yun, Helen Li, Pi-Chuan Chang, Michael F Lin, Andrew Carroll, Cory Y McLean.
+  >
+  > Bioinformatics, Volume 36, Issue 24, December 2020, Pages 5582–5589.
 
 You can cite the `nf-core` publication as follows:
 

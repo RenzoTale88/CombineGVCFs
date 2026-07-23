@@ -32,6 +32,10 @@ process GLNEXUS {
     }
     def config = params.glnexus_config == 'custom' ? "${file(params.glnexus_config_file)}" : "${params.glnexus_config}"
     """
+    # Check if jemalloc is available and print its path
+    if command -v jemalloc-config; then 
+        export LD_PRELOAD=\$( jemalloc-config --libdir )/libjemalloc.so
+    fi
     glnexus_cli \\
         --threads $task.cpus \\
         --mem-gbytes $avail_mem \\
