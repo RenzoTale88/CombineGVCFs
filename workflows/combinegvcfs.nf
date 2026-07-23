@@ -7,7 +7,6 @@
 
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { GLNEXUS                } from '../modules/nf-core/glnexus/main'
-include { BCFTOOLS_CONCAT_SORT   } from '../modules/nf-core/bcftools/concat/main'
 include { BCFTOOLS_INDEX         } from '../modules/nf-core/bcftools/index/main'
 include { BCFTOOLS_STATS         } from '../modules/nf-core/bcftools/stats/main'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -76,6 +75,75 @@ process SAMTOOLS_FAIDX {
     samtools faidx ${fasta_fn}
     """
 }
+
+// Sorted concatenation of BCFs
+process BCFTOOLS_CONCAT_SORT {
+    tag "$meta.id"
+    label 'process_medium'
+
+    conda "${moduleDir}/environment.yml"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bcftools:1.20--h8b25389_0':
+        'biocontainers/bcftools:1.20--h8b25389_0' }"
+
+    input:
+    tuple val(meta), path(vcfs), path(tbi)
+
+    output:
+    tuple val(meta), path("${prefix}.vcf.gz")    , emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: tbi, optional: true
+    tuple val(meta), path("${prefix}.vcf.gz.csi"), emit: csi, optional: true
+    path  "versions.yml"                         , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
+    def tbi_names = tbi.findAll { file -> !(file instanceof List) }.collect { file -> file.name }
+    def create_input_index = vcfs.collect {
+        vcf ->
+        tbi_names.contains(vcf.name + ".tbi") || tbi_names.contains(vcf.name + ".csi") ? "" : "bcftools index ${vcf}"
+    }.join("\n    ")
+    """
+    ${create_input_index}
+
+    # Inputs are passed as sorted using their index number, avoiding the need for concat/sorting
+    bcftools concat \\
+        $args \\
+        -O z \\
+        -a \\
+        --threads $task.cpus \\
+        --write-index=tbi \\
+        --output ${prefix}.vcf.gz \\
+        \$( ls -lv *.bcf )
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def args = task.ext.args   ?: ''
+    prefix   = task.ext.prefix ?: "${meta.id}"
+    def index = args.contains("--write-index=tbi") || args.contains("-W=tbi") ? "tbi" :
+                args.contains("--write-index=csi") || args.contains("-W=csi") ? "csi" :
+                args.contains("--write-index") || args.contains("-W") ? "csi" :
+                ""
+    def create_index = index.matches("csi|tbi") ? "touch ${prefix}.vcf.gz.${index}" : ""
+    """
+    echo "" | gzip > ${prefix}.vcf.gz
+    ${create_index}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
+    END_VERSIONS
+    """
+}
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

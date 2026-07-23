@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - `GVCF_SPLIT` process.
+- Unnecessary `bcftools/concat` module.
 
 ## v1.0.2 - [15/04/2026]
 
